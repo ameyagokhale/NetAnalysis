@@ -1,0 +1,65 @@
+{
+	"keys": [{
+			"name": "srcIp",
+			"type": "string"
+		},
+		{
+			"name": "destIp",
+			"type": "string"
+		},
+		{
+			"name": "srcMac",
+			"type": "string"
+		},
+		{
+			"name": "destMac",
+			"type": "string"
+		},
+		{
+			"name": "time",
+			"type": "long"
+		}
+	],
+	"timeBuckets": ["1m", "1h", "1d"],
+	"values": [{
+			"name": "size",
+			"type": "int",
+			"aggregators": ["SUM", "COUNT", "AVG"]
+		},
+		{
+			"name": "usage",
+			"type": "double",
+			"aggregators": ["SUM", "COUNT", "AVG"]
+		}
+	],
+	"dimensions": [{
+			"combination": []
+		},
+		{
+			"combination": ["srcIp"],
+			"additionalValues": ["size:MIN", "usage:MIN", "size:MAX", "usage:MAX"]
+		},
+		{
+			"combination": ["destIp"]
+		},
+		{
+			"combination": ["srcMac"],
+			"additionalValues": ["size:MIN", "usage:MIN", "size:MAX", "usage:MAX"]
+		},
+		{
+			"combination": ["destMac"]
+		},
+		{
+			"combination": ["scrIp", "destIp"]
+		},
+		{
+			"combination": ["srcMac", "destMac"]
+		},
+		{
+			"combination": ["scrIp", "time"]
+		},
+		{
+			"combination": ["scrMac", "time"]
+		}
+	]
+}

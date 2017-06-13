@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<configuration>
+    <property>
+        <name>dt.operator.kafkaInput.prop.clusters</name>
+        <value>192.168.1.67:9092</value>
+    </property>
+    <property>
+        <name>dt.operator.kafkaInput.prop.topics</name>
+        <value>pcap</value>
+    </property>
+    <property>
+        <name>dt.operator.kafkaInput.prop.initialOffset</name>
+        <value>EARLIEST</value>
+    </property>
+    <property>
+        <name>dt.operator.fileOutput.prop.filePath</name>
+        <value>/tmp</value>
+    </property>
+    <property>
+        <name>dt.operator.fileOutput.prop.outputFileName</name>
+        <value>Reports.txt</value>
+    </property>
+    <property>
+        <name>dt.operator.Store.fileStore.basePathPrefix</name>
+        <value>NetAnalysis/Store</value>
+    </property>
+    <property>
+        <name>dt.operator.Store.embeddableQueryInfoProvider.topic</name>
+        <value>NetAnalysis</value>
+    </property>
+    <property>
+        <name>dt.operator.QueryResult.topic</name>
+        <value>NetAnalysis</value>
+    </property>
+    <property>
+        <name>dt.operator.QueryResult.numRetries</name>
+        <value>2147483647</value>
+    </property>
+</configuration>
+

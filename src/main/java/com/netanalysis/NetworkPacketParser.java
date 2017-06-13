@@ -3,7 +3,6 @@ package com.netanalysis;
 import com.datatorrent.api.DefaultInputPort;
 import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.common.util.BaseOperator;
-import com.datatorrent.lib.appdata.schemas.DimensionalConfigurationSchema;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.packet.factory.PacketFactories;
 import org.pcap4j.packet.namednumber.DataLinkType;
@@ -13,8 +12,6 @@ import org.pcap4j.packet.namednumber.DataLinkType;
  */
 public class NetworkPacketParser extends BaseOperator
 {
-    private String eventSchemaJSON;
-    private transient DimensionalConfigurationSchema schema;
 
     public final transient DefaultOutputPort<String> outstr = new DefaultOutputPort<>();
 
