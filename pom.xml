@@ -259,34 +259,74 @@
 
   <dependencies>
     <!-- add your dependencies here -->
-    <dependency>
-      <groupId>org.apache.apex</groupId>
-      <artifactId>malhar-library</artifactId>
-      <version>3.4.0</version>
+      <dependency>
+          <groupId>org.apache.apex</groupId>
+          <artifactId>malhar-library</artifactId>
+          <version>3.7.0</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
           <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
-
     </dependency>
+
     <dependency>
         <groupId>com.datatorrent</groupId>
         <artifactId>dt-contrib</artifactId>
         <version>3.6.0-SNAPSHOT</version>
+        <exclusions>
+            <exclusion>
+                <groupId>*</groupId>
+                <artifactId>*</artifactId>
+            </exclusion>
+        </exclusions>
     </dependency>
 
+      <dependency>
+          <groupId>com.datatorrent</groupId>
+          <artifactId>dt-library</artifactId>
+          <version>3.6.0-SNAPSHOT</version>
+          <exclusions>
+              <exclusion>
+                  <groupId>*</groupId>
+                  <artifactId>*</artifactId>
+              </exclusion>
+          </exclusions>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-common</artifactId>
+          <version>2.2.0</version>
+          <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-annotations</artifactId>
+          <version>2.2.0</version>
+          <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-auth</artifactId>
+          <version>2.2.0</version>
+          <scope>provided</scope>
+      </dependency>
+
+    <!--
       <dependency>
           <groupId>net.sf.trove4j</groupId>
           <artifactId>trove4j</artifactId>
           <version>3.0.3</version>
       </dependency>
-
+      -->
       <dependency>
       <groupId>org.apache.apex</groupId>
       <artifactId>malhar-kafka</artifactId>
-      <version>3.5.0</version>
+      <version>3.7.0</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -297,7 +337,7 @@
     <dependency>
       <groupId>org.apache.apex</groupId>
       <artifactId>malhar-contrib</artifactId>
-      <version>3.5.0</version>
+      <version>3.7.0</version>
     </dependency>
     <dependency>
       <groupId>org.apache.apex</groupId>
@@ -316,8 +356,13 @@
       <artifactId>apex-engine</artifactId>
       <version>${apex.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
-
 
     <dependency>
       <groupId>org.apache.kafka</groupId>
@@ -330,17 +375,17 @@
           <version>6.6.4</version>
           <type>jar</type>
       </dependency>
-      <dependency>
-          <groupId>org.codehaus.janino</groupId>
-          <artifactId>commons-compiler</artifactId>
-          <version>2.7.8</version>
-          <type>jar</type>
-      </dependency>
-    <dependency>
+  <dependency>
       <groupId>org.codehaus.janino</groupId>
-      <artifactId>janino</artifactId>
+      <artifactId>commons-compiler</artifactId>
       <version>2.7.8</version>
-    </dependency>
+      <type>jar</type>
+  </dependency>
+<dependency>
+<groupId>org.codehaus.janino</groupId>
+<artifactId>janino</artifactId>
+<version>2.7.8</version>
+</dependency>
     <dependency>
       <groupId>com.codahale.metrics</groupId>
       <artifactId>metrics-core</artifactId>
@@ -368,6 +413,7 @@
       <artifactId>pcap4j-packetfactory-static</artifactId>
       <version>1.7.0</version>
     </dependency>
+    <!--
     <dependency>
       <groupId>io.netty</groupId>
       <artifactId>netty</artifactId>
@@ -385,17 +431,12 @@
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
-
+        -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.1</version>
     </dependency>
-      <dependency>
-          <groupId>org.apache.apex</groupId>
-          <artifactId>malhar-library</artifactId>
-          <version>3.7.0-SNAPSHOT</version>
-      </dependency>
   </dependencies>
 
 </project>

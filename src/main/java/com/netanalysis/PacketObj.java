@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * Created by ameya on 15/5/17.
  */
 
-class PacketObj implements Serializable
+public class PacketObj implements Serializable
 {
 
     public String srcIp;
@@ -27,6 +27,7 @@ class PacketObj implements Serializable
     public double usage;
     public long time ;
     public int phash;
+
 
     public PacketObj() { }
 
@@ -86,6 +87,47 @@ class PacketObj implements Serializable
         return phash;
     }
 
+
+    public void setSrcIp(String srcIp)
+    {
+        this.srcIp = srcIp;
+    }
+
+    public void setDestIp(String destIp)
+    {
+        this.destIp = destIp;
+    }
+
+    public void setSrcMac(String srcMac)
+    {
+        this.srcMac = srcMac;
+    }
+
+    public void setDestMac(String destMac)
+    {
+        this.destMac = destMac;
+    }
+
+    public void setSize(int size)
+    {
+        this.size = size;
+    }
+
+    public void setUsage(double usage)
+    {
+        this.usage = usage;
+    }
+
+    public void setTime(long time)
+    {
+        this.time = time;
+    }
+
+    public void setPhash(int phash)
+    {
+        this.phash = phash;
+    }
+
     public static class PacketObjAggregator implements Aggregator<PacketObj,PacketObjAggregateEvent>
     {
         String dimension;
@@ -127,7 +169,7 @@ class PacketObj implements Serializable
                 else
                     throw new IllegalArgumentException("Unknown Attribute "+ attribute + "specified as a part of dimension!");
             }
-            
+
             this.dimensionsDescriptorID = dimensionsDescriptorID;
             this.dimension = dimension;
         }

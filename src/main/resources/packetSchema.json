@@ -23,7 +23,7 @@
 	"timeBuckets": ["1m", "1h", "1d"],
 	"values": [{
 			"name": "size",
-			"type": "int",
+			"type": "integer",
 			"aggregators": ["SUM", "COUNT", "AVG"]
 		},
 		{
@@ -50,16 +50,16 @@
 			"combination": ["destMac"]
 		},
 		{
-			"combination": ["scrIp", "destIp"]
+			"combination": ["srcIp", "destIp"]
 		},
 		{
 			"combination": ["srcMac", "destMac"]
 		},
 		{
-			"combination": ["scrIp", "time"]
+			"combination": ["srcIp", "time"]
 		},
 		{
-			"combination": ["scrMac", "time"]
+			"combination": ["srcMac", "time"]
 		}
 	]
 }

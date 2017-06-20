@@ -4,7 +4,6 @@
 package com.netanalysis;
 
 import com.datatorrent.api.Context;
-import com.datatorrent.api.Context.OperatorContext;
 import com.datatorrent.api.DAG;
 import com.datatorrent.api.StreamingApplication;
 import com.datatorrent.api.annotation.ApplicationAnnotation;
@@ -15,26 +14,26 @@ import com.datatorrent.lib.dimensions.DimensionsComputationFlexibleSingleSchemaP
 import com.datatorrent.lib.fileaccess.TFileImpl;
 import com.datatorrent.lib.io.PubSubWebSocketAppDataQuery;
 import com.datatorrent.lib.io.PubSubWebSocketAppDataResult;
-import com.datatorrent.lib.statistics.DimensionsComputationUnifierImpl;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import org.apache.apex.malhar.kafka.KafkaSinglePortInputOperator;
-import org.apache.apex.malhar.lib.dimensions.DimensionsEvent;
 import org.apache.apex.malhar.lib.fs.GenericFileOutputOperator.StringFileOutputOperator;
 import org.apache.commons.lang.mutable.MutableLong;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.util.Map;
 
 @ApplicationAnnotation(name="NetAnalysis")
 public class Application implements StreamingApplication
 {
-    public static final String APP_NAME = "NetAnalysis";
     public static final String EVENT_SCHEMA = "packetSchema.json";
 
-    public String appName = APP_NAME;
     public String eventSchemaLocation = EVENT_SCHEMA;
+    static final org.slf4j.Logger LOG = LoggerFactory.getLogger(Application.class);
+
 
     @Override
     public void populateDAG(DAG dag, Configuration conf)
@@ -43,7 +42,7 @@ public class Application implements StreamingApplication
 
         String eventSchema = SchemaUtils.jarResourceFileToString(eventSchemaLocation);
         /*
-        String jsonSchema = "{\"keys\":\n" +
+        String eventSchema = "{\"keys\":\n" +
                 "        [{\"name\":\"srcIp\", \"type\":\"string\"},\n" +
                 "          {\"name\":\"destIp\", \"type\":\"string\"},\n" +
                 "          {\"name\":\"srcMac\", \"type\":\"string\"},\n" +
@@ -59,18 +58,16 @@ public class Application implements StreamingApplication
                 "            {\"combination\":[\"destIp\"]},\n" +
                 "            {\"combination\":[\"srcMac\"], \"additionalValues\":[\"size:MIN\", \"usage:MIN\", \"size:MAX\", \"usage:MAX\"]},\n" +
                 "            {\"combination\":[\"destMac\"]},\n" +
-                "            {\"combination\":[\"scrIp\", \"destIp\"]},\n" +
+                "            {\"combination\":[\"srcIp\", \"destIp\"]},\n" +
                 "            {\"combination\":[\"srcMac\", \"destMac\"]},\n" +
-                "            {\"combination\":[\"scrIp\", \"time\"]},\n" +
-                "            {\"combination\":[\"scrMac\", \"time\"]}]\n" +
+                "            {\"combination\":[\"srcIp\", \"time\"]},\n" +
+                "            {\"combination\":[\"srcMac\", \"time\"]}]\n" +
                 "}\n";
                 */
         KafkaSinglePortInputOperator kafkaInput = dag.addOperator("kafkaInput",KafkaSinglePortInputOperator.class);
         NetworkPacketParser parser = dag.addOperator("parser",NetworkPacketParser.class);
 
         StringFileOutputOperator fileOutput = dag.addOperator("fileOutput", StringFileOutputOperator.class);
-
-        //DimensionsComputation<PacketObj,PacketObj.PacketObjAggregateEvent> dimensions  = dag.addOperator("Dimensions",new DimensionsComputation<PacketObj, PacketObj.PacketObjAggregateEvent>()) ;
 
         DimensionsComputationFlexibleSingleSchemaPOJO dimensions = dag.addOperator("DimensionsComputation",DimensionsComputationFlexibleSingleSchemaPOJO.class);
         dag.getMeta(dimensions).getAttributes().put(Context.OperatorContext.APPLICATION_WINDOW_COUNT, 4);
@@ -82,7 +79,7 @@ public class Application implements StreamingApplication
         keyToExpression.put("destIp","getDestIp()");
         keyToExpression.put("srcMac","getSrcMac()");
         keyToExpression.put("destMac","getDestMac()");
-        //keyToExpression.put("time","getTime()");
+        keyToExpression.put("time","getTime()");
 
         Map<String,String> aggregateToExpression = Maps.newHashMap();
         aggregateToExpression.put("size","getSize()");
@@ -92,8 +89,14 @@ public class Application implements StreamingApplication
         dimensions.setAggregateToExpression(aggregateToExpression);
         dimensions.setConfigurationSchemaJSON(eventSchema);
 
-        dimensions.setUnifier(new DimensionsComputationUnifierImpl<DimensionsEvent.InputEvent, DimensionsEvent.Aggregate>());
-        dag.getMeta(dimensions).getMeta(dimensions.output).getUnifierMeta().getAttributes().put(OperatorContext.MEMORY_MB, 2048);
+        //dimensions.setUnifier(new DimensionsComputationUnifierImpl<DimensionsEvent.InputEvent, DimensionsEvent.Aggregate>());
+
+//        DAG.OutputPortMeta portMeta = dag.getMeta(dimensions).getMeta(dimensions.output);
+//        System.out.println("Port meta: " + portMeta);
+//        DAG.OperatorMeta unifierMeta = portMeta.getUnifierMeta();
+//        System.out.println("Unifier meta: " + unifierMeta);
+//        unifierMeta.getAttributes().put(Context.OperatorContext.MEMORY_MB,1000);
+//        dag.getMeta(dimensions).getMeta(dimensions.output).getUnifierMeta().getAttributes().put(Context.OperatorContext.MEMORY_MB,1000);
 
         //Set store properties
         String basePath = Preconditions.checkNotNull(conf.get(propStorePath),"add the property in properties.xml");
@@ -104,13 +107,17 @@ public class Application implements StreamingApplication
         store.getResultFormatter().setContinuousFormatString("#.00");
         store.setConfigurationSchemaJSON(eventSchema);
 
-        PubSubWebSocketAppDataQuery wsIn = new PubSubWebSocketAppDataQuery();
+        // Creating PubSub Connection
+        String gatewayAddress = dag.getValue(DAG.GATEWAY_CONNECT_ADDRESS);
+        URI uri = URI.create("ws://" + gatewayAddress + "/pubsub");
+
+        PubSubWebSocketAppDataQuery wsIn = dag.addOperator("Query", PubSubWebSocketAppDataQuery.class);
+        wsIn.setUri(uri);
+
+        PubSubWebSocketAppDataResult wsOut = dag.addOperator("QueryResult", PubSubWebSocketAppDataResult.class);
+        wsOut.setUri(uri);
+
         store.setEmbeddableQueryInfoProvider(wsIn);
-
-        PubSubWebSocketAppDataResult wsOut = dag.addOperator("QueryResult", new PubSubWebSocketAppDataResult());
-
-        //Set remaining dag options
-
 
         dag.setAttribute(store, Context.OperatorContext.COUNTERS_AGGREGATOR, new BasicCounters.LongAggregator<MutableLong>());
 
