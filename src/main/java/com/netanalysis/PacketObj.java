@@ -3,7 +3,6 @@ package com.netanalysis;
 import org.pcap4j.packet.EthernetPacket;
 import org.pcap4j.packet.IpPacket;
 import org.pcap4j.packet.Packet;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 
@@ -13,7 +12,6 @@ import java.io.Serializable;
 
 public class PacketObj implements Serializable
 {
-    static final org.slf4j.Logger LOG = LoggerFactory.getLogger(Application.class);
 
     public String srcIp;
     public String destIp;
