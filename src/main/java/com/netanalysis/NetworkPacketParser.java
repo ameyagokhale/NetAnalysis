@@ -12,6 +12,7 @@ import org.pcap4j.packet.namednumber.DataLinkType;
  */
 public class NetworkPacketParser extends BaseOperator
 {
+    public long time;
 
     public final transient DefaultOutputPort<String> outstr = new DefaultOutputPort<>();
 
@@ -27,7 +28,6 @@ public class NetworkPacketParser extends BaseOperator
 
     void processTuple(byte[] tuple)
     {
-        long time;
         if(tuple!=null)
         {
             Packet packet = PacketFactories.getFactory(Packet.class, DataLinkType.class).newInstance(tuple, 0, tuple.length, DataLinkType.EN10MB);
@@ -40,8 +40,11 @@ public class NetworkPacketParser extends BaseOperator
                 time = System.currentTimeMillis();
             }
             PacketObj packetObj = new PacketObj(packet,time);
-            outstr.emit(packet.toString());
-            out.emit(packetObj);
+            if (packetObj.size != 0)
+            {
+                outstr.emit(packet.toString());
+                out.emit(packetObj);
+            }
         }
     }
 }

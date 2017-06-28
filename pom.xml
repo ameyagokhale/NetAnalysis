@@ -259,7 +259,7 @@
 
   <dependencies>
     <!-- add your dependencies here -->
-      <dependency>
+    <dependency>
           <groupId>org.apache.apex</groupId>
           <artifactId>malhar-library</artifactId>
           <version>3.7.0</version>
@@ -270,7 +270,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
     <dependency>
         <groupId>com.datatorrent</groupId>
         <artifactId>dt-contrib</artifactId>
@@ -282,47 +281,35 @@
             </exclusion>
         </exclusions>
     </dependency>
-
-      <dependency>
-          <groupId>com.datatorrent</groupId>
-          <artifactId>dt-library</artifactId>
-          <version>3.6.0-SNAPSHOT</version>
-          <exclusions>
-              <exclusion>
-                  <groupId>*</groupId>
-                  <artifactId>*</artifactId>
-              </exclusion>
-          </exclusions>
-      </dependency>
-
+    <dependency>
+      <groupId>com.datatorrent</groupId>
+      <artifactId>dt-library</artifactId>
+      <version>3.6.0-SNAPSHOT</version>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-common</artifactId>
           <version>2.2.0</version>
           <scope>provided</scope>
       </dependency>
-
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-annotations</artifactId>
           <version>2.2.0</version>
           <scope>provided</scope>
       </dependency>
-
       <dependency>
           <groupId>org.apache.hadoop</groupId>
           <artifactId>hadoop-auth</artifactId>
           <version>2.2.0</version>
           <scope>provided</scope>
       </dependency>
-
-    <!--
-      <dependency>
-          <groupId>net.sf.trove4j</groupId>
-          <artifactId>trove4j</artifactId>
-          <version>3.0.3</version>
-      </dependency>
-      -->
       <dependency>
       <groupId>org.apache.apex</groupId>
       <artifactId>malhar-kafka</artifactId>
@@ -363,7 +350,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka_2.10</artifactId>
@@ -406,37 +392,17 @@
     <dependency>
       <groupId>org.pcap4j</groupId>
       <artifactId>pcap4j-core</artifactId>
-      <version>1.7.0</version>
+      <version>1.7.1</version>
     </dependency>
     <dependency>
       <groupId>org.pcap4j</groupId>
       <artifactId>pcap4j-packetfactory-static</artifactId>
-      <version>1.7.0</version>
+      <version>1.7.1</version>
     </dependency>
-    <!--
-    <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty</artifactId>
-      <version>3.9.0.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>16.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>org.xerial.snappy</groupId>
-      <artifactId>snappy-java</artifactId>
-      <version>1.1.2</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-        -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.1</version>
     </dependency>
   </dependencies>
-
 </project>

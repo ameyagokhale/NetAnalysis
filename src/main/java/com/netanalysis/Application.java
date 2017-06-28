@@ -21,7 +21,6 @@ import org.apache.apex.malhar.lib.fs.GenericFileOutputOperator.StringFileOutputO
 import org.apache.commons.lang.mutable.MutableLong;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.util.Map;
@@ -30,40 +29,13 @@ import java.util.Map;
 public class Application implements StreamingApplication
 {
     public static final String EVENT_SCHEMA = "packetSchema.json";
-
     public String eventSchemaLocation = EVENT_SCHEMA;
-    static final org.slf4j.Logger LOG = LoggerFactory.getLogger(Application.class);
-
+    String propStorePath = "dt.operator.Store.fileStore.basePathPrefix";
+    String eventSchema = SchemaUtils.jarResourceFileToString(eventSchemaLocation);
 
     @Override
     public void populateDAG(DAG dag, Configuration conf)
     {
-        String propStorePath = "dt.operator.Store.fileStore.basePathPrefix";
-
-        String eventSchema = SchemaUtils.jarResourceFileToString(eventSchemaLocation);
-        /*
-        String eventSchema = "{\"keys\":\n" +
-                "        [{\"name\":\"srcIp\", \"type\":\"string\"},\n" +
-                "          {\"name\":\"destIp\", \"type\":\"string\"},\n" +
-                "          {\"name\":\"srcMac\", \"type\":\"string\"},\n" +
-                "          {\"name\":\"destMac\", \"type\":\"string\"}],\n" +
-                "  \"values\":\n" +
-                "          [{\"name\":\"size\", \"type\":\"int\", \"aggregators\":[\"SUM\",\"COUNT\",\"AVG\"]},\n" +
-                "            {\"name\":\"usage\", \"type\":\"double\", \"aggregators\":[\"SUM\",\"COUNT\",\"AVG\"]}],\n" +
-                "  \"timeBuckets\":\n" +
-                "          [\"1h\",\"1m\"],\n" +
-                "  \"dimensions\":\n" +
-                "          [{\"combination\":[]},\n" +
-                "            {\"combination\":[\"srcIp\"], \"additionalValues\":[\"size:MIN\", \"usage:MIN\", \"size:MAX\", \"usage:MAX\"]},\n" +
-                "            {\"combination\":[\"destIp\"]},\n" +
-                "            {\"combination\":[\"srcMac\"], \"additionalValues\":[\"size:MIN\", \"usage:MIN\", \"size:MAX\", \"usage:MAX\"]},\n" +
-                "            {\"combination\":[\"destMac\"]},\n" +
-                "            {\"combination\":[\"srcIp\", \"destIp\"]},\n" +
-                "            {\"combination\":[\"srcMac\", \"destMac\"]},\n" +
-                "            {\"combination\":[\"srcIp\", \"time\"]},\n" +
-                "            {\"combination\":[\"srcMac\", \"time\"]}]\n" +
-                "}\n";
-                */
         KafkaSinglePortInputOperator kafkaInput = dag.addOperator("kafkaInput",KafkaSinglePortInputOperator.class);
         NetworkPacketParser parser = dag.addOperator("parser",NetworkPacketParser.class);
 
@@ -88,15 +60,6 @@ public class Application implements StreamingApplication
         dimensions.setKeyToExpression(keyToExpression);
         dimensions.setAggregateToExpression(aggregateToExpression);
         dimensions.setConfigurationSchemaJSON(eventSchema);
-
-        //dimensions.setUnifier(new DimensionsComputationUnifierImpl<DimensionsEvent.InputEvent, DimensionsEvent.Aggregate>());
-
-//        DAG.OutputPortMeta portMeta = dag.getMeta(dimensions).getMeta(dimensions.output);
-//        System.out.println("Port meta: " + portMeta);
-//        DAG.OperatorMeta unifierMeta = portMeta.getUnifierMeta();
-//        System.out.println("Unifier meta: " + unifierMeta);
-//        unifierMeta.getAttributes().put(Context.OperatorContext.MEMORY_MB,1000);
-//        dag.getMeta(dimensions).getMeta(dimensions.output).getUnifierMeta().getAttributes().put(Context.OperatorContext.MEMORY_MB,1000);
 
         //Set store properties
         String basePath = Preconditions.checkNotNull(conf.get(propStorePath),"add the property in properties.xml");

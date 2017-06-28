@@ -14,13 +14,9 @@
 		{
 			"name": "destMac",
 			"type": "string"
-		},
-		{
-			"name": "time",
-			"type": "long"
 		}
 	],
-	"timeBuckets": ["1m", "1h", "1d"],
+	"timeBuckets": ["1s","1m", "1h", "1d"],
 	"values": [{
 			"name": "size",
 			"type": "integer",
@@ -54,12 +50,6 @@
 		},
 		{
 			"combination": ["srcMac", "destMac"]
-		},
-		{
-			"combination": ["srcIp", "time"]
-		},
-		{
-			"combination": ["srcMac", "time"]
 		}
 	]
 }
